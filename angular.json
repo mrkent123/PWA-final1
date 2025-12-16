@@ -60,8 +60,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all",
-              "serviceWorker": true
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
