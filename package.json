@@ -15,6 +15,7 @@
     "cap:add:ios": "ionic capacitor add ios",
     "cap:run:ios": "ionic capacitor run ios",
     "process:hotspots": "node scripts/process-hotspots.js",
+    "watch:hotspots": "node scripts/watch-hotspots.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
@@ -55,6 +56,7 @@
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
+    "chokidar": "^4.0.3",
     "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",

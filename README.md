@@ -46,15 +46,48 @@ Framework để biến đống screenshot/video lộn xộn thành PWA prototype
 
 ### 1.5 Tự động xử lý hotspots (từ ImageJ)
 
-- Export tọa độ từ ImageJ macro thành file JSON
-- Đặt file JSON cùng tên với ảnh vào `src/assets/screens/`
-- Chạy script để merge vào main hotspot.json:
+#### Cài đặt ImageJ Integration:
 
+1. **Cài đặt ImageJ/Fiji** từ: https://imagej.nih.gov/ij/download.html
+
+2. **Copy macro vào ImageJ**:
+   - Mở ImageJ → Plugins → New → Macro
+   - Paste nội dung từ `imagej-macros/hotspot-exporter.ijm`
+   - Save as: `hotspot-exporter.ijm`
+
+3. **Chạy watcher để auto-sync**:
 ```bash
-npm run process:hotspots
+npm run watch:hotspots
 ```
 
-Ví dụ: `src/assets/screens/screen1.json` sẽ được merge vào `hotspot.json` với key `screen1`
+#### Quy trình làm việc:
+
+1. **Mở ảnh trong ImageJ**: File → Open → Chọn ảnh từ `src/assets/screens/`
+
+2. **Tạo ROIs**: Sử dụng Rectangle tool để vẽ vùng hotspots
+
+3. **Export tọa độ**: Plugins → Macros → hotspot-exporter
+   - Hoặc nhấn `E` (Ctrl+E)
+   - Macro sẽ tự động export JSON và chạy processing script
+
+4. **Kết quả**: Hotspots được merge vào `hotspot.json` và app tự động reload
+
+#### File watcher tự động:
+
+```bash
+npm run watch:hotspots  # Theo dõi thay đổi file JSON và tự động sync
+```
+
+Khi có file JSON mới từ ImageJ, watcher sẽ tự động:
+- Phát hiện file mới
+- Merge vào main hotspot.json
+- App tự động reload với hotspots mới
+
+#### Manual processing:
+
+```bash
+npm run process:hotspots  # Xử lý thủ công khi cần
+```
 
 ### 2. Config hotspots
 
