@@ -14,6 +14,7 @@
     "cap:run:android": "ionic capacitor run android",
     "cap:add:ios": "ionic capacitor add ios",
     "cap:run:ios": "ionic capacitor run ios",
+    "process:hotspots": "node scripts/process-hotspots.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

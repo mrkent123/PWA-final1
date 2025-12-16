@@ -44,6 +44,18 @@ Framework để biến đống screenshot/video lộn xộn thành PWA prototype
 ]
 ```
 
+### 1.5 Tự động xử lý hotspots (từ ImageJ)
+
+- Export tọa độ từ ImageJ macro thành file JSON
+- Đặt file JSON cùng tên với ảnh vào `src/assets/screens/`
+- Chạy script để merge vào main hotspot.json:
+
+```bash
+npm run process:hotspots
+```
+
+Ví dụ: `src/assets/screens/screen1.json` sẽ được merge vào `hotspot.json` với key `screen1`
+
 ### 2. Config hotspots
 
 Chỉnh sửa `hotspot.json`:

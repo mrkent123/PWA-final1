@@ -128,7 +128,8 @@
         "src":  "assets/screens/_20251215_19.jpg"
     },
     {
-        "src":  "assets/screens/_20251215_2.jpg"
+        "src":  "assets/screens/_20251215_2.jpg",
+        "id": "screen_20251215_2"
     },
     {
         "src":  "assets/screens/_20251215_20.jpg"
