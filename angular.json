@@ -36,7 +36,6 @@
               },
               "src/manifest.json"
             ],
-            "serviceWorker": false,
             "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": [],
             "browser": "src/main.ts"
