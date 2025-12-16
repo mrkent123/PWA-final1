@@ -2,8 +2,16 @@
 // Version: 1.0
 // Description: Export ROI coordinates as JSON for PWA prototype hotspots
 
-// Global variables
-var outputDir = "C:\\Users\\mrken\\myApp\\src\\assets\\screens\\";
+// Global variables - Use relative path for portability
+var projectRoot = getDirectory("current"); // Get current working directory
+// Go up from macros directory to project root
+var rootParts = split(projectRoot, File.separator);
+var outputDir = "";
+for (i = 0; i < rootParts.length - 2; i++) {
+    outputDir += rootParts[i] + File.separator;
+}
+outputDir += "src" + File.separator + "assets" + File.separator + "screens" + File.separator;
+
 var imageTitle = getTitle();
 var baseName = substring(imageTitle, 0, lastIndexOf(imageTitle, "."));
 
