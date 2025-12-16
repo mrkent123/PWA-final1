@@ -1,0 +1,28 @@
+<ion-content style="background: black; --padding-start: 0; --padding-end: 0; --padding-top: 0; --padding-bottom: 0;" fullscreen>
+  <div style="position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;" (swipeleft)="nextImage()" (swiperight)="prevImage()">
+    <img
+      [src]="images[currentIndex]?.src"
+      style="max-width: 100%; max-height: 100%; object-fit: contain;"
+    >
+    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 18px;">
+      {{ currentIndex + 1 }} / {{ images.length }}
+    </div>
+
+    <!-- Hotspots overlay -->
+    <div *ngIf="currentIndex === 0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+      <div
+        *ngFor="let hotspot of hotspots"
+        [style.left]="hotspot.x"
+        [style.top]="hotspot.y"
+        [style.width]="hotspot.width"
+        [style.height]="hotspot.height"
+        [style.position]="'absolute'"
+        [style.background-color]="'rgba(255, 0, 0, 0.3)'"
+        [style.border]="'2px solid red'"
+        [style.pointer-events]="'auto'"
+        (click)="onHotspotClick(hotspot.id)"
+        style="cursor: pointer;"
+      ></div>
+    </div>
+  </div>
+</ion-content>

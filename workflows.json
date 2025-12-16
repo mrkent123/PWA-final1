@@ -1,0 +1,22 @@
+{
+  "initialScreen": "login",
+  "screens": {
+    "login": {
+      "hotspots": "login",
+      "mockData": {
+        "username": "test@example.com",
+        "password": "password123"
+      }
+    },
+    "dashboard": {
+      "hotspots": "dashboard",
+      "mockData": {
+        "user": {
+          "name": "Nguyễn Văn A",
+          "email": "test@example.com",
+          "balance": "1,250,000 VND"
+        }
+      }
+    }
+  }
+}
