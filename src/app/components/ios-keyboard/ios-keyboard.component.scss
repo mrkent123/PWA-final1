@@ -1,0 +1,342 @@
+// iOS Keyboard Base Theme Override
+:host {
+  ::ng-deep {
+    // Override simple-keyboard default theme
+    .simple-keyboard {
+      background: #d1d5db;
+      border-radius: 10px 10px 0 0;
+      padding: 8px 4px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .hg-theme-default {
+      // Base keyboard styling
+      .hg-button {
+        background: white;
+        border: none;
+        border-radius: 6px;
+        color: #333;
+        font-size: 18px;
+        font-weight: 400;
+        height: 42px;
+        margin: 2px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        transition: all 0.1s ease;
+        position: relative;
+        overflow: hidden;
+
+        &:active {
+          background: #f0f0f0;
+          transform: scale(0.98);
+          box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        // Key press ripple effect
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba(0, 0, 0, 0.1);
+          transform: translate(-50%, -50%);
+          transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        &:active::before {
+          width: 120%;
+          height: 120%;
+        }
+      }
+
+      // Special keys (Done, Shift, etc.)
+      .hg-button-special {
+        background: #e5e5ea;
+        color: #007aff;
+        font-weight: 500;
+
+        &:active {
+          background: #d1d1d6;
+        }
+      }
+
+      // Wide keys (Space)
+      .hg-button-wide {
+        flex: 2.5;
+        background: #e5e5ea;
+        color: #333;
+
+        &:active {
+          background: #d1d1d6;
+        }
+      }
+
+      // Backspace key
+      .hg-button[data-skbtn="{bksp}"] {
+        background: #e5e5ea;
+        color: #333;
+
+        &:active {
+          background: #d1d1d6;
+        }
+      }
+
+      // Number pad specific styling
+      &.hg-layout-number {
+        .hg-button {
+          height: 48px;
+          font-size: 20px;
+          margin: 3px 2px;
+        }
+
+        // Special layout for number pad bottom row
+        .hg-row:last-child {
+          .hg-button:first-child {
+            flex: 1.5;
+          }
+          .hg-button:last-child {
+            flex: 3.5;
+            background: #007aff;
+            color: white;
+            font-weight: 600;
+
+            &:active {
+              background: #0056cc;
+            }
+          }
+        }
+      }
+
+      // Text keyboard specific styling
+      &.hg-layout-text {
+        .hg-button {
+          height: 42px;
+          font-size: 16px;
+        }
+
+        // Shift key styling
+        .hg-button[data-skbtn="{shift}"] {
+          background: #e5e5ea;
+          color: #333;
+
+          &.hg-active {
+            background: #007aff;
+            color: white;
+          }
+
+          &:active {
+            background: #d1d1d6;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Keyboard Container
+.ios-keyboard-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+// Input Preview Bar (iOS style)
+.keyboard-preview {
+  background: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  .preview-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #333;
+
+    .preview-label {
+      font-weight: 500;
+      margin-right: 8px;
+    }
+
+    .preview-value {
+      flex: 1;
+      font-weight: 400;
+      color: #007aff;
+      min-height: 20px;
+    }
+
+    .preview-cursor {
+      width: 2px;
+      height: 20px;
+      background: #007aff;
+      margin-left: 2px;
+      animation: blink 1s infinite;
+
+      &.blink {
+        animation: blink 1s infinite;
+      }
+    }
+  }
+
+  .preview-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #999;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+}
+
+// Keyboard Wrapper
+.keyboard-wrapper {
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &.slide-up {
+    transform: translateY(0);
+  }
+}
+
+// Keyboard Overlay
+.keyboard-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+// Animations
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .keyboard-preview {
+    padding: 10px 12px;
+
+    .preview-content {
+      font-size: 14px;
+    }
+  }
+
+  :host ::ng-deep .simple-keyboard {
+    padding: 6px 2px;
+
+    .hg-button {
+      height: 40px;
+      font-size: 16px;
+      margin: 1px;
+    }
+
+    &.hg-layout-number .hg-button {
+      height: 44px;
+      font-size: 18px;
+    }
+  }
+}
+
+// Dark mode support (future enhancement)
+@media (prefers-color-scheme: dark) {
+  .keyboard-preview {
+    background: #2c2c2c;
+    border-bottom-color: #404040;
+
+    .preview-content {
+      color: #fff;
+
+      .preview-value {
+        color: #0a84ff;
+      }
+
+      .preview-cursor {
+        background: #0a84ff;
+      }
+    }
+
+    .preview-close {
+      color: #666;
+
+      &:hover {
+        background: #404040;
+      }
+    }
+  }
+
+  :host ::ng-deep .simple-keyboard {
+    background: #1c1c1e;
+
+    .hg-button {
+      background: #48484a;
+      color: #fff;
+
+      &:active {
+        background: #636366;
+      }
+
+      &::before {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .hg-button-special {
+      background: #48484a;
+      color: #0a84ff;
+
+      &:active {
+        background: #636366;
+      }
+    }
+
+    .hg-button-wide,
+    .hg-button[data-skbtn="{bksp}"] {
+      background: #48484a;
+      color: #fff;
+
+      &:active {
+        background: #636366;
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<!-- iOS Keyboard Container -->
+<div class="ios-keyboard-container" [class.visible]="currentState.isVisible">
+
+  <!-- Input Preview Bar (iOS style) -->
+  <div class="keyboard-preview" *ngIf="currentState.isVisible">
+    <div class="preview-content">
+      <span class="preview-label">{{ currentState.placeholder || 'Input' }}:</span>
+      <span class="preview-value">{{ currentState.currentValue || '' }}</span>
+      <span class="preview-cursor" [class.blink]="true"></span>
+    </div>
+    <button class="preview-close" (click)="hide()">✕</button>
+  </div>
+
+  <!-- Keyboard -->
+  <div class="keyboard-wrapper" [class.slide-up]="currentState.isVisible">
+    <div #keyboardContainer class="simple-keyboard" id="ios-keyboard-container"></div>
+    <!-- Debug info -->
+    <div class="debug-info" style="background: yellow; padding: 5px; font-size: 12px; display: none;">
+      Keyboard State: {{ currentState | json }}
+    </div>
+  </div>
+
+</div>
+
+<!-- Keyboard Overlay (for backdrop) -->
+<div
+  class="keyboard-overlay"
+  [class.visible]="currentState.isVisible"
+  (click)="hide()"
+></div>

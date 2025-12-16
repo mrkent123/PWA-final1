@@ -1,0 +1,84 @@
+ion-app {
+  --background: #1a1a1a;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.device-frame {
+  position: relative;
+  width: 375px; // iPhone width
+  height: 812px; // iPhone height
+  margin: 20px auto;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow:
+    0 0 0 3px #1a1a1a,
+    0 0 0 6px #2a2a2a,
+    inset 0 0 0 3px #000;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 25px;
+    background: #000;
+    border-radius: 15px;
+    z-index: 10;
+  }
+}
+
+.notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 210px;
+  height: 30px;
+  background: #000;
+  border-radius: 0 0 20px 20px;
+  z-index: 10;
+}
+
+.screen-content {
+  position: absolute;
+  top: 44px; // Status bar height
+  left: 0;
+  right: 0;
+  bottom: 34px; // Home indicator height
+  border-radius: 0 0 25px 25px;
+  overflow: hidden;
+  background: #000;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 5px;
+  background: #fff;
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+// Responsive design for different screen sizes
+@media (max-width: 768px) {
+  .device-frame {
+    width: 90vw;
+    height: calc(90vw * 2.16); // Maintain aspect ratio
+    margin: 20px auto;
+  }
+}
+
+@media (max-height: 900px) {
+  .device-frame {
+    height: calc(100vh - 40px);
+    width: calc((100vh - 40px) / 2.16);
+  }
+}

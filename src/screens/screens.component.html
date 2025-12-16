@@ -1,28 +1,89 @@
-<ion-content style="background: black; --padding-start: 0; --padding-end: 0; --padding-top: 0; --padding-bottom: 0;" fullscreen>
-  <div style="position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;" (swipeleft)="nextImage()" (swiperight)="prevImage()">
-    <img
-      [src]="images[currentIndex]?.src"
-      style="max-width: 100%; max-height: 100%; object-fit: contain;"
-    >
-    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 18px;">
-      {{ currentIndex + 1 }} / {{ images.length }}
-    </div>
+<ion-content [scrollY]="false" class="screens-content">
+  <!-- Static Screen (Login) -->
+  <div *ngIf="!isScrollableScreen" class="static-screen">
+    <img [src]="currentScreen?.src" class="screen-image">
 
     <!-- Hotspots overlay -->
-    <div *ngIf="currentIndex === 0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
-      <div
-        *ngFor="let hotspot of hotspots"
-        [style.left]="hotspot.x"
-        [style.top]="hotspot.y"
-        [style.width]="hotspot.width"
-        [style.height]="hotspot.height"
-        [style.position]="'absolute'"
-        [style.background-color]="'rgba(255, 0, 0, 0.3)'"
-        [style.border]="'2px solid red'"
-        [style.pointer-events]="'auto'"
-        (click)="onHotspotClick(hotspot.id)"
-        style="cursor: pointer;"
-      ></div>
+      <div class="hotspots-overlay">
+        <div
+          *ngFor="let hotspot of currentHotspots$ | async"
+          class="hotspot"
+          [class.input-hotspot]="hotspot.action === 'input'"
+          [style.left]="hotspot.x"
+          [style.top]="hotspot.y"
+          [style.width]="hotspot.width"
+          [style.height]="hotspot.height"
+          (click)="onHotspotClick(hotspot)"
+        >
+          <!-- Visual indicator for input hotspots - shows current value -->
+          <div *ngIf="hotspot.action === 'input'" class="hotspot-input-display">
+            <span class="input-value">{{ inputValues[hotspot.field || ''] || '' }}</span>
+            <span class="input-cursor" [class.blink]="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Konva Canvas Overlay for Advanced Hotspots -->
+      <div #konvaContainer class="konva-overlay"></div>
+  </div>
+
+  <!-- Scrollable Screen (Home) -->
+  <div *ngIf="isScrollableScreen" class="scrollable-screen">
+    <!-- Pinned Header -->
+    <div class="pinned-header" [style.height]="currentScreen?.pinnedHeaderHeight">
+      <img [src]="currentScreen?.images?.[0]" class="header-image">
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="scroll-content" #scrollContainer>
+      <div class="scroll-images">
+        <img
+          *ngFor="let imgSrc of currentScreen?.images; let i = index"
+          [src]="imgSrc"
+          class="scroll-image"
+          [style.margin-top]="i === 0 ? currentScreen?.pinnedHeaderHeight : '0'"
+        >
+      </div>
+
+      <!-- Hotspots for scrollable screen -->
+      <div class="hotspots-overlay scrollable">
+        <div
+          *ngFor="let hotspot of currentHotspots$ | async"
+          class="hotspot"
+          [style.left]="hotspot.x"
+          [style.top]="hotspot.y"
+          [style.width]="hotspot.width"
+          [style.height]="hotspot.height"
+          (click)="onHotspotClick(hotspot)"
+        ></div>
+      </div>
     </div>
   </div>
+
+  <!-- Error Message -->
+  <div *ngIf="showError" class="error-toast">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="showSuccess" class="success-toast">
+    Dang nhap thanh cong!
+  </div>
+
+  <!-- Screenshot Button -->
+  <button
+    class="screenshot-btn"
+    [class.loading]="isCapturing$ | async"
+    [disabled]="isCapturing$ | async"
+    (click)="captureAndDownloadScreenshot()"
+    title="Capture Screenshot">
+    <span *ngIf="!(isCapturing$ | async)">📸</span>
+    <span *ngIf="isCapturing$ | async" class="loading-spinner">⏳</span>
+  </button>
+
+  <!-- iOS Keyboard Component -->
+  <app-ios-keyboard
+    (valueChange)="onKeyboardValueChange($event)"
+    (keyboardClose)="onKeyboardClose()">
+  </app-ios-keyboard>
 </ion-content>
