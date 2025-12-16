@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm start              # Start dev server (ng serve)
-npm run build          # Production build (output: www/)
+npm run build          # Production build (output: www/browser/)
 npm run serve:external # Serve with external network access (http://[IP]:8102)
 npm run lint           # Run ESLint
 npm test               # Run Karma tests
@@ -52,12 +52,20 @@ The `imagej-macros/hotspot-exporter.ijm` macro allows drawing hotspot regions vi
 
 ## Deployment
 
-- **Vercel**: Configured via `vercel.json`, outputs to `www/` directory
-- **PWA**: Build with `npm run build` for installable web app
-- Uses `@angular-devkit/build-angular:application` builder (Angular 17+ style)
+### Vercel
+- Configured via `vercel.json`
+- **Output directory**: `www/browser` (Angular 17+ application builder outputs to subdirectory)
+- Uses `rewrites` (not `routes`) for SPA routing - `routes` conflicts with `headers`
+
+### PWA / Service Worker
+- Service worker config: `ngsw-config.json`
+- In `angular.json` production config: `"serviceWorker": "ngsw-config.json"` (string path, NOT boolean)
+- Package: `@angular/service-worker` required in dependencies
 
 ## Important Notes
 
-- Do NOT add `serviceWorker` boolean to `angular.json` - the application builder only accepts string paths or omission
+- **Angular 17+ application builder**: Output goes to `www/browser/`, not `www/`
+- **serviceWorker in angular.json**: Must be string path (e.g., `"ngsw-config.json"`) or omitted entirely - boolean values cause schema validation errors
+- **vercel.json**: Cannot mix `routes` with `headers`/`rewrites` - use new syntax (`rewrites`, `headers`) not old (`routes`, `builds`)
 - Hotspot coordinates use percentages (e.g., `"x": "10%"`) for responsive positioning
 - Screen IDs in `screens.json` must match keys in `hotspot.json` and `workflows.json`
