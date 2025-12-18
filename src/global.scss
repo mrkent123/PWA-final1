@@ -42,12 +42,428 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: #1a1a2e; /* Desktop background */
 }
 
 ion-app {
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
 }
 
 ion-content {
   --background: black;
+}
+
+/* ==========================================================================
+   iPhone Device Frame
+   ========================================================================== */
+
+:root {
+  /* iPhone 14 Pro dimensions (scaled) */
+  --device-width: 393px;
+  --device-height: 852px;
+  --device-border-radius: 55px;
+  --screen-border-radius: 47px;
+  --bezel-width: 12px;
+
+  /* Dynamic Island dimensions */
+  --island-width: 126px;
+  --island-height: 37px;
+  --island-border-radius: 20px;
+
+  /* Home indicator */
+  --home-indicator-width: 134px;
+  --home-indicator-height: 5px;
+
+  /* Colors */
+  --device-frame-color: #1c1c1e;
+  --device-bezel-color: #0d0d0d;
+  --device-highlight: rgba(255, 255, 255, 0.1);
+  --device-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* Device Frame Container */
+.device-frame {
+  position: relative;
+  width: var(--device-width);
+  height: var(--device-height);
+  background: var(--device-frame-color);
+  border-radius: var(--device-border-radius);
+  padding: var(--bezel-width);
+  box-sizing: border-box;
+
+  /* Realistic device shadows */
+  box-shadow:
+    /* Outer glow */
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    /* Inner highlight */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    /* Main shadow */
+    0 25px 50px -12px var(--device-shadow),
+    /* Ambient shadow */
+    0 0 100px rgba(0, 0, 0, 0.3);
+
+  /* Metal edge effect */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: calc(var(--device-border-radius) + 3px);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+    z-index: -1;
+  }
+}
+
+/* Screen Content Area */
+.device-frame .screen-content {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: var(--screen-border-radius);
+  overflow: hidden;
+  position: relative;
+
+  /* Screen glass effect */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--screen-border-radius);
+    pointer-events: none;
+    z-index: 9999;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    );
+  }
+}
+
+/* Dynamic Island (iPhone 14 Pro style) */
+.device-frame .notch {
+  position: absolute;
+  top: calc(var(--bezel-width) + 11px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--island-width);
+  height: var(--island-height);
+  background: #000;
+  border-radius: var(--island-border-radius);
+  z-index: 10000;
+
+  /* Subtle inner shadow */
+  box-shadow:
+    inset 0 0 2px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  /* Camera lens */
+  &::before {
+    content: '';
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(
+      circle at 30% 30%,
+      #2c3e50 0%,
+      #1a252f 40%,
+      #0d1318 100%
+    );
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 3px rgba(0, 0, 0, 0.8),
+      0 0 2px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Sensor dot */
+  &::after {
+    content: '';
+    position: absolute;
+    right: 42px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #1a1a2e;
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+}
+
+/* Home Indicator */
+.device-frame .home-indicator {
+  position: absolute;
+  bottom: calc(var(--bezel-width) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--home-indicator-width);
+  height: var(--home-indicator-height);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: calc(var(--home-indicator-height) / 2);
+  z-index: 10000;
+
+  /* Subtle glow */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Side Buttons */
+.device-frame::after {
+  content: '';
+  position: absolute;
+
+  /* Power button (right side) */
+  right: -3px;
+  top: 180px;
+  width: 3px;
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    #2c2c2e 0%,
+    #3c3c3e 50%,
+    #2c2c2e 100%
+  );
+  border-radius: 0 2px 2px 0;
+  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Volume buttons (left side) - using separate element */
+.device-frame .volume-buttons {
+  position: absolute;
+  left: -3px;
+  top: 150px;
+  width: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &::before,
+  &::after {
+    content: '';
+    width: 3px;
+    height: 45px;
+    background: linear-gradient(
+      270deg,
+      #2c2c2e 0%,
+      #3c3c3e 50%,
+      #2c2c2e 100%
+    );
+    border-radius: 2px 0 0 2px;
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Silent switch */
+.device-frame .silent-switch {
+  position: absolute;
+  left: -3px;
+  top: 120px;
+  width: 3px;
+  height: 25px;
+  background: linear-gradient(
+    270deg,
+    #2c2c2e 0%,
+    #3c3c3e 50%,
+    #2c2c2e 100%
+  );
+  border-radius: 2px 0 0 2px;
+}
+
+/* ==========================================================================
+   Responsive Scaling
+   ========================================================================== */
+
+/* Scale down for smaller screens */
+@media (max-height: 900px) {
+  :root {
+    --device-width: 340px;
+    --device-height: 736px;
+    --device-border-radius: 48px;
+    --screen-border-radius: 40px;
+    --bezel-width: 10px;
+    --island-width: 110px;
+    --island-height: 32px;
+  }
+}
+
+/* Full screen mode for mobile devices */
+@media (max-width: 430px) {
+  html, body {
+    background: #000;
+  }
+
+  .device-frame {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  .device-frame .screen-content {
+    border-radius: 0;
+  }
+
+  .device-frame .notch {
+    top: 11px;
+  }
+
+  .device-frame .home-indicator {
+    bottom: 8px;
+  }
+
+  .device-frame .volume-buttons,
+  .device-frame .silent-switch {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Device Frame Toggle (for presentations)
+   ========================================================================== */
+
+/* When frame is disabled */
+.device-frame.no-frame {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+
+  .screen-content {
+    border-radius: 0;
+  }
+
+  .notch,
+  .home-indicator,
+  .volume-buttons,
+  .silent-switch {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Desktop Background Patterns
+   ========================================================================== */
+
+/* Gradient background for desktop view */
+@media (min-width: 431px) {
+  html, body {
+    background:
+      radial-gradient(ellipse at top, #1a1a2e 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, #16213e 0%, transparent 50%),
+      linear-gradient(180deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  }
+}
+
+/* Optional: Grid pattern overlay */
+.desktop-grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ==========================================================================
+   Frame Toggle Button
+   ========================================================================== */
+
+.frame-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 99999;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Hide toggle button on mobile */
+@media (max-width: 430px) {
+  .frame-toggle-btn {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Device Model Selector (Optional enhancement)
+   ========================================================================== */
+
+/* iPhone SE / 8 dimensions */
+.device-frame.iphone-se {
+  --device-width: 375px;
+  --device-height: 667px;
+  --device-border-radius: 45px;
+  --screen-border-radius: 0;
+  --bezel-width: 0;
+
+  .notch {
+    /* Classic status bar style instead of notch */
+    width: 100%;
+    height: 20px;
+    border-radius: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .home-indicator {
+    /* Home button style */
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    bottom: 10px;
+    background: transparent;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* iPhone 15 Pro Max dimensions */
+.device-frame.iphone-15-pro-max {
+  --device-width: 430px;
+  --device-height: 932px;
+  --island-width: 126px;
+  --island-height: 37px;
 }

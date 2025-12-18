@@ -1,7 +1,11 @@
 <ion-app>
-  <div class="device-frame">
-    <!-- iPhone notch -->
+  <div class="device-frame" [class.no-frame]="!showDeviceFrame">
+    <!-- Dynamic Island (iPhone 14 Pro style notch) -->
     <div class="notch"></div>
+
+    <!-- Side buttons -->
+    <div class="silent-switch"></div>
+    <div class="volume-buttons"></div>
 
     <!-- Screen content -->
     <div class="screen-content">
@@ -11,4 +15,12 @@
     <!-- Home indicator -->
     <div class="home-indicator"></div>
   </div>
+
+  <!-- Frame Toggle Button (Desktop only) -->
+  <button
+    class="frame-toggle-btn"
+    (click)="toggleDeviceFrame()"
+    title="Toggle Device Frame">
+    {{ showDeviceFrame ? '📱' : '🖥️' }}
+  </button>
 </ion-app>

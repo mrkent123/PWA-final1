@@ -1,64 +1,22 @@
 <ion-content [scrollY]="false" class="screens-content">
-  <!-- Static Screen (Login) -->
-  <div *ngIf="!isScrollableScreen" class="static-screen">
-    <img [src]="currentScreen?.src" class="screen-image">
+  <!-- Screen Viewer Component -->
+  <app-screen-viewer
+    [currentScreen]="currentScreen"
+    [isScrollableScreen]="isScrollableScreen"
+    [scrollableContentHeight]="0"
+    (imageError)="onImageError($event)">
+  </app-screen-viewer>
 
-    <!-- Hotspots overlay -->
-      <div class="hotspots-overlay">
-        <div
-          *ngFor="let hotspot of currentHotspots$ | async"
-          class="hotspot"
-          [class.input-hotspot]="hotspot.action === 'input'"
-          [style.left]="hotspot.x"
-          [style.top]="hotspot.y"
-          [style.width]="hotspot.width"
-          [style.height]="hotspot.height"
-          (click)="onHotspotClick(hotspot)"
-        >
-          <!-- Visual indicator for input hotspots - shows current value -->
-          <div *ngIf="hotspot.action === 'input'" class="hotspot-input-display">
-            <span class="input-value">{{ inputValues[hotspot.field || ''] || '' }}</span>
-            <span class="input-cursor" [class.blink]="true"></span>
-          </div>
-        </div>
-      </div>
+  <!-- Hotspot Overlay Component -->
+  <app-hotspot-overlay
+    [hotspots]="(currentHotspots$ | async) || []"
+    [inputValues]="inputValues"
+    [isScrollable]="isScrollableScreen"
+    (hotspotClick)="onHotspotClick($event)">
+  </app-hotspot-overlay>
 
-      <!-- Konva Canvas Overlay for Advanced Hotspots -->
-      <div #konvaContainer class="konva-overlay"></div>
-  </div>
-
-  <!-- Scrollable Screen (Home) -->
-  <div *ngIf="isScrollableScreen" class="scrollable-screen">
-    <!-- Pinned Header -->
-    <div class="pinned-header" [style.height]="currentScreen?.pinnedHeaderHeight">
-      <img [src]="currentScreen?.images?.[0]" class="header-image">
-    </div>
-
-    <!-- Scrollable Content -->
-    <div class="scroll-content" #scrollContainer>
-      <div class="scroll-images">
-        <img
-          *ngFor="let imgSrc of currentScreen?.images; let i = index"
-          [src]="imgSrc"
-          class="scroll-image"
-          [style.margin-top]="i === 0 ? currentScreen?.pinnedHeaderHeight : '0'"
-        >
-      </div>
-
-      <!-- Hotspots for scrollable screen -->
-      <div class="hotspots-overlay scrollable">
-        <div
-          *ngFor="let hotspot of currentHotspots$ | async"
-          class="hotspot"
-          [style.left]="hotspot.x"
-          [style.top]="hotspot.y"
-          [style.width]="hotspot.width"
-          [style.height]="hotspot.height"
-          (click)="onHotspotClick(hotspot)"
-        ></div>
-      </div>
-    </div>
-  </div>
+  <!-- Konva Canvas Overlay for Advanced Hotspots -->
+  <div #konvaContainer class="konva-overlay"></div>
 
   <!-- Error Message -->
   <div *ngIf="showError" class="error-toast">
@@ -67,18 +25,28 @@
 
   <!-- Success Message -->
   <div *ngIf="showSuccess" class="success-toast">
-    Dang nhap thanh cong!
+    {{ localizationService.translate('loginSuccess') }}
   </div>
 
   <!-- Screenshot Button -->
   <button
     class="screenshot-btn"
-    [class.loading]="isCapturing$ | async"
-    [disabled]="isCapturing$ | async"
+    [class.loading]="(isCapturing$ | async) === true"
+    [disabled]="(isCapturing$ | async) === true"
     (click)="captureAndDownloadScreenshot()"
     title="Capture Screenshot">
-    <span *ngIf="!(isCapturing$ | async)">📸</span>
-    <span *ngIf="isCapturing$ | async" class="loading-spinner">⏳</span>
+    <span *ngIf="(isCapturing$ | async) === false">📸</span>
+    <span *ngIf="(isCapturing$ | async) === true" class="loading-spinner">⏳</span>
+  </button>
+
+  <!-- Hotspot Creation Mode Toggle -->
+  <button
+    class="hotspot-create-btn"
+    [class.active]="isCreatingHotspot"
+    (click)="toggleHotspotCreation()"
+    title="Toggle Hotspot Creation Mode">
+    <span *ngIf="!isCreatingHotspot">➕</span>
+    <span *ngIf="isCreatingHotspot" class="hotspot-creation-indicator">✏️</span>
   </button>
 
   <!-- iOS Keyboard Component -->

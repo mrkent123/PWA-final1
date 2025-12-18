@@ -1,0 +1,36 @@
+<div class="hotspots-overlay" [class.scrollable]="isScrollable" [class.focusable]="hotspots.length > 0">
+  <div
+    *ngFor="let hotspot of hotspots; let i = index; trackBy: trackByHotspotId"
+    class="hotspot"
+    [class.input-hotspot]="hotspot.action === 'input'"
+    [class.focused]="focusedHotspotIndex === i"
+    [style.left]="hotspot.x"
+    [style.top]="hotspot.y"
+    [style.width]="hotspot.width"
+    [style.height]="hotspot.height"
+    [attr.aria-label]="getHotspotDescription(hotspot)"
+    [attr.role]="hotspot.action === 'input' ? 'textbox' : 'button'"
+    [attr.tabindex]="hotspots.length > 0 ? '0' : '-1'"
+    [attr.aria-describedby]="hotspot.action === 'input' ? 'input-desc-' + hotspot.id : null"
+    (click)="onHotspotClick(hotspot)"
+    (focus)="onHotspotFocus(hotspot, i)"
+    (blur)="onHotspotBlur(hotspot)"
+    (mouseenter)="onHotspotFocus(hotspot, i)"
+    (mouseleave)="onHotspotBlur(hotspot)">
+
+    <!-- Input hotspot display -->
+    <div *ngIf="hotspot.action === 'input'" class="hotspot-input-display">
+      <span class="input-value" [attr.id]="'input-desc-' + hotspot.id">
+        {{ inputValues[hotspot.field || ''] || '' }}
+      </span>
+      <span class="input-cursor" [class.blink]="focusedHotspotIndex === i"></span>
+    </div>
+
+    <!-- Visual indicator for non-input hotspots -->
+    <div *ngIf="hotspot.action !== 'input'" class="hotspot-indicator" [attr.aria-hidden]="true">
+      <span class="hotspot-action-icon">
+        {{ hotspot.action === 'navigate' ? '→' : hotspot.action === 'login' ? '🔒' : '⚡' }}
+      </span>
+    </div>
+  </div>
+</div>

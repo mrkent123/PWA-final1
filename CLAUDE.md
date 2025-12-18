@@ -12,10 +12,9 @@ npm run lint           # Run ESLint
 npm test               # Run Karma tests
 ```
 
-### Hotspot Processing (ImageJ Integration)
+### Image Processing Automation
 ```bash
-npm run watch:hotspots    # Auto-sync hotspots from ImageJ exports
-npm run process:hotspots  # Manual hotspot processing
+python scripts/process_images.py  # Process all images, normalize filenames, group by content, remove signal bars
 ```
 
 ### Mobile Deployment
@@ -28,15 +27,16 @@ npm run cap:run:ios       # Run on iOS device
 
 ## Architecture
 
-This is a **Screenshot-to-PWA Prototype Framework** built with Angular 20 + Ionic 8. It transforms screenshot images into interactive prototypes without coding UI components.
+This is an **Automated Screenshot-to-PWA Prototype Framework** built with Angular 20 + Ionic 8. It transforms screenshot images into interactive native-like prototypes without coding UI components, with full automation for image processing.
 
 ### Core Concept
-- Screenshots serve as the UI (stored in `src/assets/screens/`)
+- Screenshots serve as the UI (stored in `src/assets/screens/` with any naming convention)
 - Clickable regions (hotspots) are defined via JSON, using percentage-based positioning for responsiveness
 - Navigation flows are configured through JSON files, not code
+- Full automation for image processing: filename normalization, content-based grouping, signal bar removal
 
 ### Key Configuration Files
-- `src/assets/screens.json` - List of screen images with IDs
+- `src/assets/screens.json` - List of screen images with IDs (auto-generated from images)
 - `hotspot.json` - Clickable region definitions (x, y, width, height in %) with actions
 - `workflows.json` - Navigation logic, initial screen, and mock data per screen
 
@@ -47,8 +47,17 @@ This is a **Screenshot-to-PWA Prototype Framework** built with Angular 20 + Ioni
 - Handles navigation between screens via hotspot clicks
 - Supports swipe gestures for sequential navigation
 
-### ImageJ Integration
-The `imagej-macros/hotspot-exporter.ijm` macro allows drawing hotspot regions visually in ImageJ/Fiji. The `scripts/watch-hotspots.js` watcher auto-merges exported coordinates into `hotspot.json`.
+### Automated Image Processing ✅ IMPLEMENTED
+The `scripts/process_images.py` script provides complete automation for:
+- ✅ Filename normalization (removes special characters, numbers, hashes)
+- ✅ Content-based image grouping using HSV histogram similarity (determines scrollable vs static screens)
+- ✅ Signal bar removal (automatically detects and removes status bar areas)
+- ✅ Auto-generation of screens.json from images in directory
+- ✅ Backup creation to preserve original files
+- ✅ Full pipeline: backup → normalize → clean → group → generate config
+
+### Hotspot Creation
+Hotspots are created directly within the application using a drag-and-drop interface. The application automatically detects image dimensions to determine scrollable vs static screens.
 
 ## Deployment
 
@@ -69,3 +78,4 @@ The `imagej-macros/hotspot-exporter.ijm` macro allows drawing hotspot regions vi
 - **vercel.json**: Cannot mix `routes` with `headers`/`rewrites` - use new syntax (`rewrites`, `headers`) not old (`routes`, `builds`)
 - Hotspot coordinates use percentages (e.g., `"x": "10%"`) for responsive positioning
 - Screen IDs in `screens.json` must match keys in `hotspot.json` and `workflows.json`
+- Use `python scripts/process_images.py` to automate all image processing and configuration

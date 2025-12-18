@@ -1,0 +1,42 @@
+<!-- Static Screen (Login) -->
+<div *ngIf="!isScrollableScreen" class="static-screen">
+  <!-- Loading state -->
+  <div *ngIf="!currentScreen" class="loading-screen">
+    <div class="loading-spinner"></div>
+    <p>Đang tải màn hình...</p>
+  </div>
+
+  <!-- Screen content -->
+  <img
+    *ngIf="currentScreen?.src"
+    [src]="currentScreen?.src || ''"
+    class="screen-image"
+    (error)="onImageError($event)"
+    [alt]="'Màn hình ' + currentScreen?.id"
+    role="img">
+</div>
+
+<!-- Scrollable Screen (Home) -->
+<div *ngIf="isScrollableScreen" class="scrollable-screen">
+  <!-- Pinned Header -->
+  <div class="pinned-header" [style.height]="currentScreen?.pinnedHeaderHeight">
+    <img
+      [src]="currentScreen?.images?.[0]"
+      class="header-image"
+      [alt]="'Header màn hình ' + currentScreen?.id"
+      role="img">
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="scroll-content">
+    <div class="scroll-images">
+      <img
+        *ngFor="let imgSrc of currentScreen?.images; let i = index; trackBy: trackByImageSrc"
+        [src]="imgSrc"
+        class="scroll-image"
+        [style.margin-top]="i === 0 ? currentScreen?.pinnedHeaderHeight : '0'"
+        [alt]="'Nội dung màn hình ' + currentScreen?.id + ' phần ' + (i + 1)"
+        role="img">
+    </div>
+  </div>
+</div>

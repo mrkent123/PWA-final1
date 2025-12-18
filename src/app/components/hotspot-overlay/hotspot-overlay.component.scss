@@ -1,0 +1,142 @@
+.hotspots-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  &.scrollable {
+    position: relative;
+  }
+
+  &.focusable {
+    .hotspot {
+      pointer-events: auto;
+    }
+  }
+}
+
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  outline: none;
+
+  &:hover, &:focus, &.focused {
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.8);
+    z-index: 10;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+
+  &.input-hotspot {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    min-height: 24px;
+
+    .hotspot-input-display {
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .input-value {
+        flex: 1;
+        font-size: 14px;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .input-cursor {
+        width: 1px;
+        height: 16px;
+        background-color: #007bff;
+        margin-left: 1px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        &.blink {
+          animation: blink 1s infinite;
+        }
+      }
+    }
+  }
+
+  &:not(.input-hotspot) {
+    background: rgba(0, 122, 255, 0.1);
+    border: 2px solid rgba(0, 122, 255, 0.3);
+
+    .hotspot-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      min-height: 20px;
+
+      .hotspot-action-icon {
+        font-size: 12px;
+        color: rgba(0, 122, 255, 0.8);
+        font-weight: bold;
+      }
+    }
+
+    &:hover .hotspot-indicator .hotspot-action-icon {
+      color: #007bff;
+      transform: scale(1.1);
+    }
+  }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .hotspot {
+    &.input-hotspot {
+      background: white;
+      border: 2px solid black;
+
+      .input-value {
+        color: black;
+      }
+
+      .input-cursor {
+        background-color: black;
+      }
+    }
+
+    &:not(.input-hotspot) {
+      background: rgba(0, 122, 255, 0.2);
+      border: 2px solid #007bff;
+
+      .hotspot-indicator .hotspot-action-icon {
+        color: #007bff;
+      }
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .hotspot {
+    transition: none;
+
+    .input-cursor.blink {
+      animation: none;
+      opacity: 1;
+    }
+  }
+}

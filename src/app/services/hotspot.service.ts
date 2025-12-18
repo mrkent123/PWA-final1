@@ -165,4 +165,54 @@ export class HotspotService {
   getCurrentHotspots(): Hotspot[] {
     return this.currentHotspotsSubject.value;
   }
+
+  addHotspot(screenId: string, hotspot: Hotspot): void {
+    if (!this.hotspotData[screenId]) {
+      this.hotspotData[screenId] = [];
+    }
+
+    this.hotspotData[screenId].push(hotspot);
+    this.updateHotspotFile();
+
+    // Nếu đang là màn hình hiện tại, cập nhật observable
+    if (screenId === this.currentHotspotsSubject.value[0]?.id.split('_')[0] ||
+        (this.currentHotspotsSubject.value.length > 0 && screenId)) {
+      this.setCurrentScreen(screenId);
+    }
+  }
+
+  updateHotspot(screenId: string, updatedHotspot: Hotspot): void {
+    if (this.hotspotData[screenId]) {
+      const index = this.hotspotData[screenId].findIndex(h => h.id === updatedHotspot.id);
+      if (index !== -1) {
+        this.hotspotData[screenId][index] = updatedHotspot;
+        this.updateHotspotFile();
+
+        // Nếu đang là màn hình hiện tại, cập nhật observable
+        if (screenId === this.currentHotspotsSubject.value[0]?.id.split('_')[0] ||
+            (this.currentHotspotsSubject.value.length > 0 && screenId)) {
+          this.setCurrentScreen(screenId);
+        }
+      }
+    }
+  }
+
+  updateHotspotFile(): string {
+    // Trả về chuỗi JSON để người dùng có thể lưu thủ công
+    const hotspotJson = JSON.stringify({ screens: this.hotspotData }, null, 2);
+    console.log('Updated hotspot.json content:', hotspotJson);
+
+    // Có thể hiện thị hoặc lưu vào clipboard
+    navigator.clipboard?.writeText(hotspotJson).then(() => {
+      console.log('Hotspot JSON copied to clipboard!');
+    }).catch(err => {
+      console.error('Could not copy to clipboard: ', err);
+    });
+
+    return hotspotJson;
+  }
+
+  getHotspotData(): { [screenId: string]: Hotspot[] } {
+    return this.hotspotData;
+  }
 }

@@ -23,6 +23,38 @@
   }
 }
 
+// Loading Screen
+.loading-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 1000;
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #007aff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 // Hotspots
 .hotspots-overlay {
   position: absolute;
@@ -244,4 +276,54 @@
     top: 0;
     left: 0;
   }
+}
+
+// Hotspot Creation Button
+.hotspot-create-btn {
+  position: fixed;
+  top: 20px;
+  right: 80px; // Position to the left of screenshot button
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 140, 0, 0.9); // Orange color for creation mode
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 140, 0, 1);
+    transform: scale(1.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.active {
+    background: rgba(255, 69, 0, 0.9); // Redder when active
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
+    animation: pulse 1s infinite;
+  }
+
+  .hotspot-creation-indicator {
+    animation: bounce 0.5s ease infinite alternate;
+  }
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-5px); }
 }

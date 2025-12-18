@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import Keyboard from 'simple-keyboard';
@@ -12,6 +12,8 @@ import { IosKeyboardService, KeyboardState } from './ios-keyboard.service';
   imports: [CommonModule]
 })
 export class IosKeyboardComponent implements OnInit, OnDestroy {
+  private keyboardService = inject(IosKeyboardService);
+
   @ViewChild('keyboardContainer', { static: true }) keyboardContainer!: ElementRef;
 
   @Output() valueChange = new EventEmitter<{ field: string; value: string }>();
@@ -58,8 +60,6 @@ export class IosKeyboardComponent implements OnInit, OnDestroy {
       "{numbers} {space} {done}"
     ]
   };
-
-  constructor(private keyboardService: IosKeyboardService) {}
 
   ngOnInit() {
     this.subscription = this.keyboardService.keyboardState.subscribe(state => {

@@ -1,0 +1,41 @@
+<div class="error-boundary" *ngIf="error" role="alert" aria-live="assertive">
+  <div class="error-content">
+    <div class="error-icon">⚠️</div>
+
+    <div class="error-details">
+      <h3 class="error-title">{{ errorTitle }}</h3>
+      <p class="error-message">{{ getUserFriendlyMessage() }}</p>
+
+      <div class="error-actions">
+        <button
+          class="btn btn-primary"
+          (click)="onRetry()"
+          aria-label="Thử lại yêu cầu">
+          {{ retryButtonText }}
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          (click)="onDismiss()"
+          aria-label="Đóng thông báo lỗi">
+          {{ dismissButtonText }}
+        </button>
+
+        <button
+          class="btn btn-link"
+          (click)="toggleDetails()"
+          aria-label="Chuyển đổi hiển thị chi tiết lỗi">
+          {{ showDetailsText }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error details (collapsible) -->
+  <div class="error-technical" *ngIf="showDetails" role="region" aria-label="Chi tiết kỹ thuật lỗi">
+    <div class="error-stack">
+      <h4>Thông tin kỹ thuật:</h4>
+      <pre>{{ error?.stack }}</pre>
+    </div>
+  </div>
+</div>
